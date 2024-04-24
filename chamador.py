@@ -4,7 +4,7 @@ class Chamador:
         self.andar = andar
         
 
-    def enviar_chamado(self, direcao):
-        self.elevador.adicionar_chamado(self.andar, direcao)
+    def enviar_chamado(self):
+        self.elevador.adicionar_chamado(self.andar)
 
     

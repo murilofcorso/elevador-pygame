@@ -1,6 +1,7 @@
 import pygame
 import sys
 from elevador import Elevador
+from chamador import Chamador
 
 # Inicialize o Pygame
 pygame.init()
@@ -20,7 +21,16 @@ pygame.display.set_caption("Janela Pygame")
 # Crie o elevador
 e = Elevador(tela)
 
+# Crie o chamador
+c0 = Chamador(e, 0)
+c1 = Chamador(e, 1)
+c2 = Chamador(e, 2)
+c3 = Chamador(e, 3)
+
+
 # Loop principal do jogo
+c3.enviar_chamado()
+c2.enviar_chamado()
 while True:
     # Lida com eventos
     for evento in pygame.event.get():
@@ -32,7 +42,7 @@ while True:
     tela.fill(PRETO)
     # Desenhe outros elementos na tela aqui
     tela.blit(e.image, e.rect.topleft)
-    e.mover(3)
+    e.update()
 
     # Atualize a tela
     pygame.display.flip()
