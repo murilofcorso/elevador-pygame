@@ -7,7 +7,6 @@ class Elevador(pygame.sprite.Sprite):
         self.largura = 70
         self.altura = 130
         self.image = pygame.surface.Surface((self.largura, self.altura), pygame.SRCALPHA)
-        self.image.fill("WHITE")
         self.rect = self.image.get_rect()
 
         self.status = "parado"
@@ -25,12 +24,14 @@ class Elevador(pygame.sprite.Sprite):
         if self.status == "parado":
             self.status = "movendo" 
 
-        if self.rect.bottom > self.tela.get_height() - (destino * self.altura):
-            self.rect.y -= 2
-        elif self.rect.bottom < self.tela.get_height() - (destino * self.altura):
-            self.rect.y += 2
-        else:
-            self.status = "parado"
+        if self.status == "movendo":
+            if self.rect.bottom > self.tela.get_height() - (destino * self.altura):
+                self.rect.y -= 2
+            elif self.rect.bottom < self.tela.get_height() - (destino * self.altura):
+                self.rect.y += 2
+            else:
+                self.status = "parado"
+                self.abrir_porta()
 
         if self.rect.bottom in self.andares.keys():
             self.andar_atual = self.andares[self.rect.bottom]
@@ -39,6 +40,23 @@ class Elevador(pygame.sprite.Sprite):
     def abrir_porta(self):
         if self.status == "parado":
             self.status = "porta_aberta"
+
+        # if self.status == "porta_aberta":
+
+
+    def desenhar(self):
+        self.image.fill("black")
+        if self.status != "porta_aberta":
+            self.largura_porta = self.largura/2
+            self.pos_porta_direita = self.largura_porta
+        else:
+            self.largura_porta -= 1
+            self.pos_porta_direita += 1
+            if self.largura_porta <= 0:
+                self.fechar_porta()
+
+        pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.largura_porta, self.altura))
+        pygame.draw.rect(self.image, (255, 255, 255), (self.pos_porta_direita, 0, self.largura_porta, self.altura))
 
 
     def fechar_porta(self):
@@ -64,4 +82,5 @@ class Elevador(pygame.sprite.Sprite):
 
     def update(self):
         self.mover(self.retornar_proximo_chamado())
-        print(self.chamados)
+        self.desenhar()
+        print(self.chamados, self.status)

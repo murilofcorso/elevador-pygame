@@ -39,7 +39,7 @@ while True:
             sys.exit()
 
     # Atualize a tela
-    tela.fill(PRETO)
+    tela.fill((80, 80, 255))
     # Desenhe outros elementos na tela aqui
     tela.blit(e.image, e.rect.topleft)
     e.update()
