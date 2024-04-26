@@ -20,6 +20,7 @@ class Elevador(pygame.sprite.Sprite):
         self.rect.bottomleft = (self.tela.get_width()/2 - self.largura/2, self.tela.get_height() - (self.andar_atual * self.altura))
         self.chamados = []
 
+
     def mover(self, destino):
         if self.status == "parado":
             self.status = "movendo" 
@@ -42,8 +43,6 @@ class Elevador(pygame.sprite.Sprite):
         if self.status == "parado":
             self.status = "porta_abrindo"
 
-        # if self.status == "porta_abrindo":
-
 
     def desenhar(self):
         self.image.fill("black")
@@ -54,9 +53,10 @@ class Elevador(pygame.sprite.Sprite):
             if self.status == "porta_abrindo":
                 self.largura_porta -= 1
                 self.pos_porta_direita += 1
-                if self.largura_porta <= 0:
+                if self.largura_porta < -1:
+                    pygame.time.delay(2000)
                     self.fechar_porta()
-            else:
+            elif self.status == "porta_fechando":
                 self.largura_porta += 1
                 self.pos_porta_direita -= 1
                 if self.largura_porta >= self.largura/2:
@@ -88,6 +88,5 @@ class Elevador(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.mover(self.retornar_proximo_chamado())
         self.desenhar()
-        print(self.chamados, self.status)
+        self.mover(self.retornar_proximo_chamado())

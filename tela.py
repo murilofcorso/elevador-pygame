@@ -22,18 +22,18 @@ pygame.display.set_caption("Janela Pygame")
 e = Elevador(tela)
 
 # Crie o chamador
-c0 = Chamador(e, 0)
-c1 = Chamador(e, 1)
-c2 = Chamador(e, 2)
-c3 = Chamador(e, 3)
+c0 = Chamador(tela, e, 0)
+c1 = Chamador(tela, e, 1)
+c2 = Chamador(tela, e, 2)
+c3 = Chamador(tela, e, 3)
+
 
 
 # Loop principal do jogo
-c3.enviar_chamado()
-c2.enviar_chamado()
 while True:
     # Lida com eventos
     for evento in pygame.event.get():
+        ultimo_evento = evento
         if evento.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -42,6 +42,16 @@ while True:
     tela.fill((80, 80, 255))
     # Desenhe outros elementos na tela aqui
     tela.blit(e.image, e.rect.topleft)
+    tela.blit(c0.image, c0.rect.topleft)
+    tela.blit(c1.image, c1.rect.topleft)
+    tela.blit(c2.image, c2.rect.topleft)
+    tela.blit(c3.image, c3.rect.topleft)
+
+    # updates
+    c0.update(ultimo_evento)
+    c1.update(ultimo_evento)
+    c2.update(ultimo_evento)
+    c3.update(ultimo_evento)
     e.update()
 
     # Atualize a tela
