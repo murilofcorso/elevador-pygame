@@ -20,6 +20,7 @@ class Elevador(pygame.sprite.Sprite):
         self.rect.bottomleft = (self.tela.get_width()/2 - self.largura/2, self.tela.get_height() - (self.andar_atual * self.altura))
         self.chamados = []
 
+        self.fechamento_tick = 0
         self.fechou = False
         self.abriu = False
 
@@ -81,16 +82,20 @@ class Elevador(pygame.sprite.Sprite):
 
     def cooldowns(self):
         self.tick_atual = pygame.time.get_ticks()
-        # cooldown 
-        if self.fechou:
-            if self.tick_atual - self.fechamento_tick > 1200:
-                self.fechou = False
-                self.status = "parado"
-
+        # cooldown porta aberta
         if self.abriu:
             if self.tick_atual - self.abertura_tick > 1200:
                 self.abriu = False
                 self.status = "porta_fechando"
+        # cooldown porta fechada
+        if self.fechou:
+            if self.tick_atual - self.fechamento_tick > 1200:
+                self.status = "parado"
+                self.fechou = False
+        # cooldown parado longe do térreo
+        if (self.tick_atual - self.fechamento_tick > 10000) & (self.andar_atual != 0):
+            self.adicionar_chamado(0)
+                
 
 
     def adicionar_chamado(self, andar):
@@ -105,7 +110,7 @@ class Elevador(pygame.sprite.Sprite):
             else:
                 return self.andar_atual
         else:
-            return 0
+            return self.andar_atual
 
 
     def update(self):
