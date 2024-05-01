@@ -1,4 +1,5 @@
 import pygame
+from debug import debug
 
 class Elevador(pygame.sprite.Sprite):
     def __init__(self, tela):
@@ -19,6 +20,7 @@ class Elevador(pygame.sprite.Sprite):
         self.andar_atual = 0
         self.rect.bottomleft = (self.tela.get_width()/2 - self.largura/2, self.tela.get_height() - (self.andar_atual * self.altura))
         self.chamados = []
+        self.chamados_internos = []
 
         self.fechamento_tick = 0
         self.fechou = False
@@ -32,14 +34,14 @@ class Elevador(pygame.sprite.Sprite):
             elif destino < self.andar_atual:
                 self.status = "descendo"
 
-        if self.status in ("subindo", "descendo"):
+        if self.status in ("subindo", "descendo", "parado"):
             if self.rect.bottom > self.tela.get_height() - (destino * self.altura):
-                self.rect.y -= 2
+                self.rect.y -= 1
             elif self.rect.bottom < self.tela.get_height() - (destino * self.altura):
-                self.rect.y += 2
+                self.rect.y += 1
             else:
                 self.status = "parado"
-                if len(self.chamados) > 0:
+                if (len(self.chamados) > 0) or (len(self.chamados_internos) > 0):
                     self.abrir_porta()
 
         if self.rect.bottom in self.andares.keys():
@@ -72,7 +74,8 @@ class Elevador(pygame.sprite.Sprite):
                     self.status = "porta_fechada"
                     self.fechou = True
                     self.fechamento_tick = pygame.time.get_ticks()
-                    self.chamados.pop(0)
+                    if self.andar_atual in self.chamados: self.chamados.remove(self.andar_atual)
+                    if self.andar_atual in self.chamados_internos: self.chamados_internos.remove(self.andar_atual)
 
         pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.largura_porta, self.altura))
         pygame.draw.rect(self.image, (255, 255, 255), (self.pos_porta_direita, 0, self.largura_porta, self.altura))
@@ -102,9 +105,21 @@ class Elevador(pygame.sprite.Sprite):
             self.chamados.append(andar)
         self.chamados.sort(reverse=True)
 
+    def adicionar_chamado_interno(self, andar):
+        if andar not in self.chamados_internos:
+            self.chamados_internos.append(andar)
+        self.chamados_internos.sort(reverse=True)
+
     
     def retornar_proximo_chamado(self):
-        if len(self.chamados) > 0:
+        if len(self.chamados_internos) > 0:
+            if self.andar_atual in self.chamados:
+                return self.andar_atual
+            elif self.andar_atual != self.chamados_internos[0]:
+                return self.chamados_internos[0]
+            else:
+                return self.andar_atual
+        elif len(self.chamados) > 0:
             if self.andar_atual != self.chamados[0]:
                 return self.chamados[0]
             else:
@@ -117,4 +132,9 @@ class Elevador(pygame.sprite.Sprite):
         self.cooldowns()
         self.desenhar()
         self.mover(self.retornar_proximo_chamado())
-        print(f"{self.status}, {self.chamados}")
+        debug(f"Status do elevador: {self.status}")
+        debug(f"Lista de chamados externos: {self.chamados}", y=30)
+        debug(f"Lista de chamados internos: {self.chamados_internos}", y=50)
+
+
+            
