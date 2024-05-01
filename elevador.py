@@ -27,9 +27,12 @@ class Elevador(pygame.sprite.Sprite):
 
     def mover(self, destino):
         if self.status == "parado":
-            self.status = "movendo" 
+            if destino > self.andar_atual:
+                self.status = "subindo"
+            elif destino < self.andar_atual:
+                self.status = "descendo"
 
-        if self.status == "movendo":
+        if self.status in ("subindo", "descendo"):
             if self.rect.bottom > self.tela.get_height() - (destino * self.altura):
                 self.rect.y -= 2
             elif self.rect.bottom < self.tela.get_height() - (destino * self.altura):
@@ -92,16 +95,13 @@ class Elevador(pygame.sprite.Sprite):
             if self.tick_atual - self.fechamento_tick > 1200:
                 self.status = "parado"
                 self.fechou = False
-        # cooldown parado longe do térreo
-        if (self.tick_atual - self.fechamento_tick > 10000) & (self.andar_atual != 0):
-            self.adicionar_chamado(0)
                 
-
 
     def adicionar_chamado(self, andar):
         if andar not in self.chamados:
             self.chamados.append(andar)
-    
+        self.chamados.sort(reverse=True)
+
     
     def retornar_proximo_chamado(self):
         if len(self.chamados) > 0:
@@ -117,3 +117,4 @@ class Elevador(pygame.sprite.Sprite):
         self.cooldowns()
         self.desenhar()
         self.mover(self.retornar_proximo_chamado())
+        print(f"{self.status}, {self.chamados}")
