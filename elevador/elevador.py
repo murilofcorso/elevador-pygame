@@ -36,9 +36,9 @@ class Elevador(pygame.sprite.Sprite):
 
         if self.status in ("subindo", "descendo", "parado"):
             if self.rect.bottom > self.tela.get_height() - (destino * self.altura):
-                self.rect.y -= 1
+                self.rect.y -= 2
             elif self.rect.bottom < self.tela.get_height() - (destino * self.altura):
-                self.rect.y += 1
+                self.rect.y += 2
             else:
                 self.status = "parado"
                 if (len(self.chamados) > 0) or (len(self.chamados_internos) > 0):
@@ -125,6 +125,8 @@ class Elevador(pygame.sprite.Sprite):
             else:
                 return self.andar_atual
         else:
+            if self.andar_atual != 0:
+                self.adicionar_chamado(0)
             return self.andar_atual
 
 
@@ -133,8 +135,8 @@ class Elevador(pygame.sprite.Sprite):
         self.desenhar()
         self.mover(self.retornar_proximo_chamado())
         debug(f"Status do elevador: {self.status}")
-        debug(f"Lista de chamados externos: {self.chamados}", y=30)
-        debug(f"Lista de chamados internos: {self.chamados_internos}", y=50)
+        debug(f"Lista de chamados: {self.chamados}", y=30)
+        # debug(f"Lista de chamados internos: {self.chamados_internos}", y=50)
 
 
             

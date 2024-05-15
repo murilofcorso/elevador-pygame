@@ -18,7 +18,12 @@ class Chamador(pygame.sprite.Sprite):
         self.elevador.adicionar_chamado(self.andar)
 
     def desenhar(self):
-        self.image.fill("black")
+        self.image.fill("white")
+        font = pygame.font.SysFont(None, 36)
+        text_render = font.render(str(self.andar), True, (0, 0, 0))
+        text_rect = text_render.get_rect()
+        text_rect.center = (self.largura // 2, self.largura // 2)
+        self.image.blit(text_render, text_rect)
 
     def checar_click(self):
         if self.evento.type == pygame.MOUSEBUTTONDOWN:

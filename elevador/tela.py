@@ -28,7 +28,7 @@ c1 = Chamador(tela, e, 1)
 c2 = Chamador(tela, e, 2)
 c3 = Chamador(tela, e, 3)
 
-p = Painel(tela, e, 4)
+# p = Painel(tela, e, 4)
 
 
 # Loop principal do jogo
@@ -48,14 +48,14 @@ while True:
     tela.blit(c1.image, c1.rect.topleft)
     tela.blit(c2.image, c2.rect.topleft)
     tela.blit(c3.image, c3.rect.topleft)
-    tela.blit(p.image, p.rect.topleft)
+    # tela.blit(p.image, p.rect.topleft)
 
     # updates
     c0.update(ultimo_evento)
     c1.update(ultimo_evento)
     c2.update(ultimo_evento)
     c3.update(ultimo_evento)
-    p.update(ultimo_evento)
+    # p.update(ultimo_evento)
     e.update()
 
     # Atualize a tela
